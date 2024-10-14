@@ -1,0 +1,213 @@
+import PyPDF2
+import re
+from datetime import timedelta
+import json
+
+def extract_text_from_pdf(pdf_path):
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text()
+    return text
+
+def parse_lecture_data(text):
+    chapters = []
+    current_chapter = None
+    pattern = re.compile(r'(Chapter \d+.*?)|(Lecture \d+)\s+(.*?)\s+(\d{1,2}:\d{2}:\d{2})')
+    
+    for line in text.split('\n'):
+        chapter_match = re.match(r'Chapter \d+.*', line)
+        if chapter_match:
+            if current_chapter:
+                chapters.append(current_chapter)
+            current_chapter = {'name': line.strip(), 'lectures': []}
+        else:
+            match = pattern.search(line)
+            if match and current_chapter:
+                lecture_num, lecture_name, duration = match.group(2), match.group(3), match.group(4)
+                current_chapter['lectures'].append({
+                    'sr': lecture_num,
+                    'name': lecture_name.strip(),
+                    'duration': duration
+                })
+    
+    if current_chapter:
+        chapters.append(current_chapter)
+    
+    return chapters
+
+def calculate_total_duration(lectures):
+    total_seconds = 0
+    for lecture in lectures:
+        h, m, s = map(int, lecture['duration'].split(':'))
+        total_seconds += h * 3600 + m * 60 + s
+    return str(timedelta(seconds=total_seconds))
+
+def generate_html(chapters):
+    html = """
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #121212;
+                color: #e0e0e0;
+                line-height: 1.6;
+                padding: 20px;
+            }
+            h2 {
+                color: #bb86fc;
+                border-bottom: 2px solid #bb86fc;
+                padding-bottom: 10px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            th, td {
+                border: 1px solid #333;
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #1f1f1f;
+                color: #03dac6;
+            }
+            tr:nth-child(even) {
+                background-color: #1a1a1a;
+            }
+            .lecture-name {
+                max-width: 300px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            input[type="checkbox"] {
+                transform: scale(1.5);
+            }
+            .duration-info {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                font-size: 0.9em;
+            }
+            .duration-info span {
+                background-color: #1f1f1f;
+                padding: 5px 10px;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+    """
+    
+    for chapter in chapters:
+        html += f"<h2>{chapter['name']}</h2>"
+        total_duration = calculate_total_duration(chapter['lectures'])
+        html += f"""
+        <div class="duration-info">
+            <span id="total-duration-{chapter['name']}">Total Duration: {total_duration}</span>
+            <span id="completed-duration-{chapter['name']}">Completed Duration: 00:00:00</span>
+            <span id="remaining-duration-{chapter['name']}">Remaining Duration: {total_duration}</span>
+        </div>
+        <table>
+            <tr>
+                <th>Sr.</th>
+                <th>Lecture Name</th>
+                <th>Duration</th>
+                <th>Completed</th>
+            </tr>
+        """
+        
+        for lecture in chapter['lectures']:
+            html += f"""
+            <tr>
+                <td>{lecture['sr']}</td>
+                <td class="lecture-name" title="{lecture['name']}">{lecture['name']}</td>
+                <td>{lecture['duration']}</td>
+                <td><input type="checkbox" data-chapter="{chapter['name']}" data-duration="{lecture['duration']}"></td>
+            </tr>
+            """
+        
+        html += "</table>"
+    
+    html += """
+    <script>
+        function toSeconds(time) {
+            const [hours, minutes, seconds] = time.split(':').map(Number);
+            return hours * 3600 + minutes * 60 + seconds;
+        }
+
+        function toTimeString(seconds) {
+            return new Date(seconds * 1000).toISOString().substr(11, 8);
+        }
+
+        function updateDurations(chapter) {
+            const checkboxes = document.querySelectorAll(`input[type="checkbox"][data-chapter="${chapter}"]`);
+            let completedSeconds = 0;
+            let totalSeconds = 0;
+
+            checkboxes.forEach(checkbox => {
+                const duration = toSeconds(checkbox.dataset.duration);
+                totalSeconds += duration;
+                if (checkbox.checked) {
+                    completedSeconds += duration;
+                }
+            });
+
+            const remainingSeconds = totalSeconds - completedSeconds;
+
+            document.getElementById(`completed-duration-${chapter}`).textContent = `Completed Duration: ${toTimeString(completedSeconds)}`;
+            document.getElementById(`remaining-duration-${chapter}`).textContent = `Remaining Duration: ${toTimeString(remainingSeconds)}`;
+        }
+
+        function saveState() {
+            const state = {};
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                state[`${checkbox.dataset.chapter}-${checkbox.parentElement.parentElement.cells[0].textContent}`] = checkbox.checked;
+            });
+            localStorage.setItem('lectureState', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const state = JSON.parse(localStorage.getItem('lectureState')) || {};
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                const key = `${checkbox.dataset.chapter}-${checkbox.parentElement.parentElement.cells[0].textContent}`;
+                if (state[key]) {
+                    checkbox.checked = state[key];
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                updateDurations(checkbox.dataset.chapter);
+                checkbox.addEventListener('change', () => {
+                    updateDurations(checkbox.dataset.chapter);
+                    saveState();
+                });
+            });
+        });
+    </script>
+    </body>
+    </html>
+    """
+    return html
+
+def process_pdf(pdf_path, output_path):
+    text = extract_text_from_pdf(pdf_path)
+    chapters = parse_lecture_data(text)
+    html_content = generate_html(chapters)
+    
+    with open(output_path, 'w', encoding='utf-8') as file:
+        file.write(html_content)
+
+# Usage
+pdf_path = '01_C_Prog.pdf'
+output_path = '01_C_Prog.html'
+process_pdf(pdf_path, output_path)
