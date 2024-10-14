@@ -1,51 +1,4 @@
-import PyPDF2
-import re
-from datetime import timedelta
-import json
 
-def extract_text_from_pdf(pdf_path):
-    with open(pdf_path, 'rb') as file:
-        reader = PyPDF2.PdfReader(file)
-        text = ""
-        for page in reader.pages:
-            text += page.extract_text()
-    return text
-
-def parse_lecture_data(text):
-    chapters = []
-    current_chapter = None
-    pattern = re.compile(r'(Chapter \d+.*?)|(Lecture \d+)\s+(.*?)\s+(\d{1,2}:\d{2}:\d{2})')
-    
-    for line in text.split('\n'):
-        chapter_match = re.match(r'Chapter \d+.*', line)
-        if chapter_match:
-            if current_chapter:
-                chapters.append(current_chapter)
-            current_chapter = {'name': line.strip(), 'lectures': []}
-        else:
-            match = pattern.search(line)
-            if match and current_chapter:
-                lecture_num, lecture_name, duration = match.group(2), match.group(3), match.group(4)
-                current_chapter['lectures'].append({
-                    'sr': lecture_num,
-                    'name': lecture_name.strip(),
-                    'duration': duration
-                })
-    
-    if current_chapter:
-        chapters.append(current_chapter)
-    
-    return chapters
-
-def calculate_total_duration(lectures):
-    total_seconds = 0
-    for lecture in lectures:
-        h, m, s = map(int, lecture['duration'].split(':'))
-        total_seconds += h * 3600 + m * 60 + s
-    return str(timedelta(seconds=total_seconds))
-
-def generate_html(chapters):
-    html = """
     <html>
     <head>
         <meta charset="UTF-8">
@@ -103,16 +56,11 @@ def generate_html(chapters):
         </style>
     </head>
     <body>
-    """
-    
-    for chapter in chapters:
-        html += f"<h2>{chapter['name']}</h2>"
-        total_duration = calculate_total_duration(chapter['lectures'])
-        html += f"""
+    <h2>Chapter 01 Sets and Relations</h2>
         <div class="duration-info">
-            <span id="total-duration-{chapter['name']}">Total Duration: {total_duration}</span>
-            <span id="completed-duration-{chapter['name']}">Completed Duration: 00:00:00</span>
-            <span id="remaining-duration-{chapter['name']}">Remaining Duration: {total_duration}</span>
+            <span id="total-duration-Chapter 01 Sets and Relations">Total Duration: 23:36:15</span>
+            <span id="completed-duration-Chapter 01 Sets and Relations">Completed Duration: 00:00:00</span>
+            <span id="remaining-duration-Chapter 01 Sets and Relations">Remaining Duration: 23:36:15</span>
         </div>
         <table>
             <tr>
@@ -121,21 +69,2033 @@ def generate_html(chapters):
                 <th>Duration</th>
                 <th>Completed</th>
             </tr>
-        """
         
-        for lecture in chapter['lectures']:
-            html += f"""
             <tr>
-                <td>{lecture['sr']}</td>
-                <td class="lecture-name" title="{lecture['name']}">{lecture['name']}</td>
-                <td>{lecture['duration']}</td>
-                <td><input type="checkbox" data-chapter="{chapter['name']}" data-duration="{lecture['duration']}"></td>
+                <td>Lecture 01</td>
+                <td class="lecture-name" title="Set, Representation of sets, Cardinality of a set & Types of Sets">Set, Representation of sets, Cardinality of a set & Types of Sets</td>
+                <td>0:49:47</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:49:47"></td>
             </tr>
-            """
+            
+            <tr>
+                <td>Lecture 02</td>
+                <td class="lecture-name" title="Universal Set, Subset & Superset and Proper Subset">Universal Set, Subset & Superset and Proper Subset</td>
+                <td>0:34:05</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:34:05"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 03</td>
+                <td class="lecture-name" title="Powerset of a Set">Powerset of a Set</td>
+                <td>0:06:12</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:06:12"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 04</td>
+                <td class="lecture-name" title="Workbook Questions 1-2">Workbook Questions 1-2</td>
+                <td>0:13:06</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:13:06"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 05</td>
+                <td class="lecture-name" title="Workbook Questions 3-4">Workbook Questions 3-4</td>
+                <td>0:14:30</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:14:30"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 06</td>
+                <td class="lecture-name" title="Venn Diagram & Workbook Questions 5-6">Venn Diagram & Workbook Questions 5-6</td>
+                <td>0:11:09</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:11:09"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 07</td>
+                <td class="lecture-name" title="Set Operations">Set Operations</td>
+                <td>0:17:02</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:17:02"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 08</td>
+                <td class="lecture-name" title="Properties & Laws Over Set Operations">Properties & Laws Over Set Operations</td>
+                <td>0:06:43</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:06:43"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 09</td>
+                <td class="lecture-name" title="Workbook Question 7">Workbook Question 7</td>
+                <td>0:08:13</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:08:13"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 10</td>
+                <td class="lecture-name" title="Workbook Questions 8-12">Workbook Questions 8-12</td>
+                <td>0:16:32</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:16:32"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 11</td>
+                <td class="lecture-name" title="Workbook Questions 13-15">Workbook Questions 13-15</td>
+                <td>0:18:40</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:18:40"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 12</td>
+                <td class="lecture-name" title="Workbook Question 16">Workbook Question 16</td>
+                <td>0:14:39</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:14:39"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 13</td>
+                <td class="lecture-name" title="Principle of Inclusion Exclusion">Principle of Inclusion Exclusion</td>
+                <td>0:15:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:15:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 14</td>
+                <td class="lecture-name" title="Workbook Question 17">Workbook Question 17</td>
+                <td>0:09:21</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:09:21"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 15</td>
+                <td class="lecture-name" title="Multisets">Multisets</td>
+                <td>0:39:52</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:39:52"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 16</td>
+                <td class="lecture-name" title="Workbook Questions 18-19">Workbook Questions 18-19</td>
+                <td>0:27:43</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:27:43"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 17</td>
+                <td class="lecture-name" title="Cartesian Product & Relation">Cartesian Product & Relation</td>
+                <td>0:30:14</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:30:14"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 18</td>
+                <td class="lecture-name" title="Workbook Questions 20, 21-22">Workbook Questions 20, 21-22</td>
+                <td>0:04:16</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:04:16"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 19</td>
+                <td class="lecture-name" title="Types Of Relations, Di agonal Relation & Reflexive Re lation">Types Of Relations, Di agonal Relation & Reflexive Re lation</td>
+                <td>0:41:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:41:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 20</td>
+                <td class="lecture-name" title="Irreflexive Relation">Irreflexive Relation</td>
+                <td>0:13:37</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:13:37"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 21</td>
+                <td class="lecture-name" title="Symmetric Relation">Symmetric Relation</td>
+                <td>0:52:34</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:52:34"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 22</td>
+                <td class="lecture-name" title="Antisymmetric Relation">Antisymmetric Relation</td>
+                <td>0:27:35</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:27:35"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 23</td>
+                <td class="lecture-name" title="Asymmetric Relation">Asymmetric Relation</td>
+                <td>0:15:25</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:15:25"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 24</td>
+                <td class="lecture-name" title="Transitive Relation">Transitive Relation</td>
+                <td>0:35:22</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:35:22"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 25</td>
+                <td class="lecture-name" title="Inverse of a Relation">Inverse of a Relation</td>
+                <td>0:11:27</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:11:27"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 26</td>
+                <td class="lecture-name" title="Complement of a Relation">Complement of a Relation</td>
+                <td>0:09:47</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:09:47"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 27</td>
+                <td class="lecture-name" title="Composition of Two Relations">Composition of Two Relations</td>
+                <td>0:44:01</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:44:01"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 28</td>
+                <td class="lecture-name" title="Workbook Questions 23-24">Workbook Questions 23-24</td>
+                <td>0:07:54</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:07:54"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 29</td>
+                <td class="lecture-name" title="Workbook Questions 25-26">Workbook Questions 25-26</td>
+                <td>0:10:09</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:10:09"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 30</td>
+                <td class="lecture-name" title="Workbook Questions 27-29">Workbook Questions 27-29</td>
+                <td>0:26:53</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:26:53"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 31</td>
+                <td class="lecture-name" title="Workbook Questions 30-31">Workbook Questions 30-31</td>
+                <td>0:20:32</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:20:32"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 32</td>
+                <td class="lecture-name" title="Workbook Questions 32-33">Workbook Questions 32-33</td>
+                <td>0:31:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:31:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 33</td>
+                <td class="lecture-name" title="Reflexive Closure & Workbook Question 34">Reflexive Closure & Workbook Question 34</td>
+                <td>0:05:54</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:05:54"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 34</td>
+                <td class="lecture-name" title="Symmetric Closure  & Workbook Question 35">Symmetric Closure  & Workbook Question 35</td>
+                <td>0:11:46</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:11:46"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 35</td>
+                <td class="lecture-name" title="Transitive Closur e & Workbook Question 36">Transitive Closur e & Workbook Question 36</td>
+                <td>0:14:29</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:14:29"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 36</td>
+                <td class="lecture-name" title="Warshall's Algorith m & Workbook Question 36">Warshall's Algorith m & Workbook Question 36</td>
+                <td>0:19:35</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:19:35"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 37</td>
+                <td class="lecture-name" title="Workbook Question 37">Workbook Question 37</td>
+                <td>0:30:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:30:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 38</td>
+                <td class="lecture-name" title="Workbook Questions 38-39">Workbook Questions 38-39</td>
+                <td>0:09:00</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:09:00"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 39</td>
+                <td class="lecture-name" title="Equivalence Relation">Equivalence Relation</td>
+                <td>0:13:16</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:13:16"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 40</td>
+                <td class="lecture-name" title="Workbook Questions 40-41">Workbook Questions 40-41</td>
+                <td>0:04:02</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:04:02"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 41</td>
+                <td class="lecture-name" title="Workbook Questions 42-43">Workbook Questions 42-43</td>
+                <td>0:29:05</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:29:05"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 42</td>
+                <td class="lecture-name" title="Partition of a Set">Partition of a Set</td>
+                <td>0:09:35</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:09:35"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 43</td>
+                <td class="lecture-name" title="Equivalence Class">Equivalence Class</td>
+                <td>0:30:26</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:30:26"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 44</td>
+                <td class="lecture-name" title="Workbook Questions 44-45">Workbook Questions 44-45</td>
+                <td>0:51:17</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:51:17"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 45</td>
+                <td class="lecture-name" title="Workbook Question 46">Workbook Question 46</td>
+                <td>0:15:04</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:15:04"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 46</td>
+                <td class="lecture-name" title="Workbook Questions 47-48">Workbook Questions 47-48</td>
+                <td>0:06:15</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:06:15"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 47</td>
+                <td class="lecture-name" title="Workbook Question 49">Workbook Question 49</td>
+                <td>0:03:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:03:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 48</td>
+                <td class="lecture-name" title="Workbook Question 50-53">Workbook Question 50-53</td>
+                <td>0:19:00</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:19:00"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 49</td>
+                <td class="lecture-name" title="Partial Orde ring Relation & POSET">Partial Orde ring Relation & POSET</td>
+                <td>0:22:23</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:22:23"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 50</td>
+                <td class="lecture-name" title="Comparability & To tally Ordered S et (TOSET)">Comparability & To tally Ordered S et (TOSET)</td>
+                <td>0:20:35</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:20:35"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 51</td>
+                <td class="lecture-name" title="Workbook Questions 54-55">Workbook Questions 54-55</td>
+                <td>0:18:37</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:18:37"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 52</td>
+                <td class="lecture-name" title="Least Upper Bound  & Greatest Lower Bound">Least Upper Bound  & Greatest Lower Bound</td>
+                <td>0:42:07</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:42:07"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 53</td>
+                <td class="lecture-name" title="Minimal & Maximal Elements">Minimal & Maximal Elements</td>
+                <td>0:19:42</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:19:42"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 54</td>
+                <td class="lecture-name" title="Minimum & Maximum Elements">Minimum & Maximum Elements</td>
+                <td>0:11:41</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:11:41"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 55</td>
+                <td class="lecture-name" title="Hasse Diagram or POSET Diagram">Hasse Diagram or POSET Diagram</td>
+                <td>0:15:22</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:15:22"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 56</td>
+                <td class="lecture-name" title="Workbook Questions 56-60">Workbook Questions 56-60</td>
+                <td>0:48:29</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:48:29"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 57</td>
+                <td class="lecture-name" title="Semi Lattices & Lattice">Semi Lattices & Lattice</td>
+                <td>0:26:26</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:26:26"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 58</td>
+                <td class="lecture-name" title="Workbook Questions 61-66">Workbook Questions 61-66</td>
+                <td>0:28:47</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:28:47"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 59</td>
+                <td class="lecture-name" title="Sub-Lattice & Workbook Question 67">Sub-Lattice & Workbook Question 67</td>
+                <td>0:45:30</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:45:30"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 60</td>
+                <td class="lecture-name" title="Bounded Lattice">Bounded Lattice</td>
+                <td>0:43:48</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:43:48"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 62</td>
+                <td class="lecture-name" title="Important Points to Remember While Checking for Comp lement of an Element">Important Points to Remember While Checking for Comp lement of an Element</td>
+                <td>0:11:02</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:11:02"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 63</td>
+                <td class="lecture-name" title="Workbook Questions 68-70">Workbook Questions 68-70</td>
+                <td>0:26:08</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:26:08"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 64</td>
+                <td class="lecture-name" title="Important Points to Re member While Checking for Dist ributive Property">Important Points to Re member While Checking for Dist ributive Property</td>
+                <td>0:25:47</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:25:47"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 65</td>
+                <td class="lecture-name" title="Workbook Questions 71-75">Workbook Questions 71-75</td>
+                <td>0:13:21</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:13:21"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 66</td>
+                <td class="lecture-name" title="Important Points to Remember WRT Boolean Algebra">Important Points to Remember WRT Boolean Algebra</td>
+                <td>0:05:19</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:05:19"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 67</td>
+                <td class="lecture-name" title="Workbook Questions 76-77">Workbook Questions 76-77</td>
+                <td>0:06:10</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:06:10"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 68</td>
+                <td class="lecture-name" title="Workbook Question 78">Workbook Question 78</td>
+                <td>0:07:23</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:07:23"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 69</td>
+                <td class="lecture-name" title="Workbook Question 79">Workbook Question 79</td>
+                <td>0:18:07</td>
+                <td><input type="checkbox" data-chapter="Chapter 01 Sets and Relations" data-duration="0:18:07"></td>
+            </tr>
+            </table><h2>Chapter 02 Graph Theory (Part-1)</h2>
+        <div class="duration-info">
+            <span id="total-duration-Chapter 02 Graph Theory (Part-1)">Total Duration: 1 day, 9:47:26</span>
+            <span id="completed-duration-Chapter 02 Graph Theory (Part-1)">Completed Duration: 00:00:00</span>
+            <span id="remaining-duration-Chapter 02 Graph Theory (Part-1)">Remaining Duration: 1 day, 9:47:26</span>
+        </div>
+        <table>
+            <tr>
+                <th>Sr.</th>
+                <th>Lecture Name</th>
+                <th>Duration</th>
+                <th>Completed</th>
+            </tr>
         
-        html += "</table>"
-    
-    html += """
+            <tr>
+                <td>Lecture 01</td>
+                <td class="lecture-name" title="Basics of Graph">Basics of Graph</td>
+                <td>0:53:27</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:53:27"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 02</td>
+                <td class="lecture-name" title="No of Simple Graphs & Workbook Questions 1-2">No of Simple Graphs & Workbook Questions 1-2</td>
+                <td>0:46:53</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:46:53"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 03</td>
+                <td class="lecture-name" title="Workbook Question 3">Workbook Question 3</td>
+                <td>0:04:20</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:04:20"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 04</td>
+                <td class="lecture-name" title="Workbook Question 4">Workbook Question 4</td>
+                <td>0:29:18</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:29:18"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 05</td>
+                <td class="lecture-name" title="Degree of a Vertex in a Graph">Degree of a Vertex in a Graph</td>
+                <td>0:44:12</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:44:12"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 06</td>
+                <td class="lecture-name" title="Complete Graph, Cycle Graph & Wheel Graph">Complete Graph, Cycle Graph & Wheel Graph</td>
+                <td>0:35:54</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:35:54"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 07</td>
+                <td class="lecture-name" title="Connected Graph, Cyclic Graph, Acyclic Graph & Tree">Connected Graph, Cyclic Graph, Acyclic Graph & Tree</td>
+                <td>0:25:15</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:25:15"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 08</td>
+                <td class="lecture-name" title="Bipartite Graph & Complete Bipartite Graph">Bipartite Graph & Complete Bipartite Graph</td>
+                <td>0:25:43</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:25:43"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 09</td>
+                <td class="lecture-name" title="Workbook Questions 5-6">Workbook Questions 5-6</td>
+                <td>0:09:11</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:09:11"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 10</td>
+                <td class="lecture-name" title="Workbook Question 7">Workbook Question 7</td>
+                <td>0:02:39</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:02:39"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 11</td>
+                <td class="lecture-name" title="Workbook Question 8">Workbook Question 8</td>
+                <td>0:08:13</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:08:13"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 12</td>
+                <td class="lecture-name" title="Workbook Question 9">Workbook Question 9</td>
+                <td>0:02:31</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:02:31"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 13</td>
+                <td class="lecture-name" title="Sum of Degree Theorem for Vertices">Sum of Degree Theorem for Vertices</td>
+                <td>0:33:41</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:33:41"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 14</td>
+                <td class="lecture-name" title="Workbook Questions 10-13">Workbook Questions 10-13</td>
+                <td>0:15:39</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:15:39"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 15</td>
+                <td class="lecture-name" title="Workbook Question 14-15">Workbook Question 14-15</td>
+                <td>0:03:30</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:03:30"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 16</td>
+                <td class="lecture-name" title="Workbook Question 16">Workbook Question 16</td>
+                <td>0:06:46</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:06:46"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 17</td>
+                <td class="lecture-name" title="Degree Sequence & Workbook Question 17">Degree Sequence & Workbook Question 17</td>
+                <td>0:49:33</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:49:33"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 18</td>
+                <td class="lecture-name" title="Havel Hakimi's Result & Workbook Question 18">Havel Hakimi's Result & Workbook Question 18</td>
+                <td>0:42:06</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:42:06"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 19</td>
+                <td class="lecture-name" title="Workbook Question 19">Workbook Question 19</td>
+                <td>0:14:31</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:14:31"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 20</td>
+                <td class="lecture-name" title="Complement of a Graph">Complement of a Graph</td>
+                <td>0:13:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:13:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 21</td>
+                <td class="lecture-name" title="Workbook Question 20">Workbook Question 20</td>
+                <td>0:03:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:03:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 22</td>
+                <td class="lecture-name" title="Workbook Question 21">Workbook Question 21</td>
+                <td>0:01:52</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:01:52"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 23</td>
+                <td class="lecture-name" title="Workbook Question 22">Workbook Question 22</td>
+                <td>0:04:17</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:04:17"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 24</td>
+                <td class="lecture-name" title="Isomorphic Graphs & Workbook Question 23">Isomorphic Graphs & Workbook Question 23</td>
+                <td>1:01:54</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="1:01:54"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 25</td>
+                <td class="lecture-name" title="Workbook Question 24">Workbook Question 24</td>
+                <td>0:06:28</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:06:28"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 26</td>
+                <td class="lecture-name" title="Workbook Question 25">Workbook Question 25</td>
+                <td>0:11:33</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:11:33"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 27</td>
+                <td class="lecture-name" title="Workbook Question 26">Workbook Question 26</td>
+                <td>0:05:44</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:05:44"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 28</td>
+                <td class="lecture-name" title="Workbook Question 27">Workbook Question 27</td>
+                <td>0:04:57</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:04:57"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 29</td>
+                <td class="lecture-name" title="Workbook Question 28">Workbook Question 28</td>
+                <td>0:11:25</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:11:25"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 30</td>
+                <td class="lecture-name" title="Self-Complementary Graph">Self-Complementary Graph</td>
+                <td>0:11:23</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:11:23"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 31</td>
+                <td class="lecture-name" title="Workbook Question 29">Workbook Question 29</td>
+                <td>0:05:28</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:05:28"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 32</td>
+                <td class="lecture-name" title="Workbook Question 30">Workbook Question 30</td>
+                <td>0:03:45</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:03:45"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 33</td>
+                <td class="lecture-name" title="Workbook Question 31">Workbook Question 31</td>
+                <td>0:08:52</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:08:52"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 34</td>
+                <td class="lecture-name" title="Planar Graphs (Part 1)">Planar Graphs (Part 1)</td>
+                <td>0:48:18</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:48:18"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 35</td>
+                <td class="lecture-name" title="Planar Graphs (Part 2)">Planar Graphs (Part 2)</td>
+                <td>0:43:38</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:43:38"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 36</td>
+                <td class="lecture-name" title="Planar Graphs (Part 3)">Planar Graphs (Part 3)</td>
+                <td>0:23:14</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:23:14"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 37</td>
+                <td class="lecture-name" title="Workbook Question 32-33">Workbook Question 32-33</td>
+                <td>0:04:00</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:04:00"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 38</td>
+                <td class="lecture-name" title="Workbook Question 34">Workbook Question 34</td>
+                <td>0:02:47</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:02:47"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 39</td>
+                <td class="lecture-name" title="Workbook Question 35">Workbook Question 35</td>
+                <td>0:01:29</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:01:29"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 40</td>
+                <td class="lecture-name" title="Workbook Question 36">Workbook Question 36</td>
+                <td>0:03:13</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:03:13"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 41</td>
+                <td class="lecture-name" title="Workbook Question 37">Workbook Question 37</td>
+                <td>0:02:04</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:02:04"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 42</td>
+                <td class="lecture-name" title="Workbook Question 38">Workbook Question 38</td>
+                <td>0:01:54</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:01:54"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 43</td>
+                <td class="lecture-name" title="Workbook Question 39">Workbook Question 39</td>
+                <td>0:01:20</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:01:20"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 44</td>
+                <td class="lecture-name" title="Workbook Question 40">Workbook Question 40</td>
+                <td>0:02:36</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:02:36"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 45</td>
+                <td class="lecture-name" title="Workbook Question 41">Workbook Question 41</td>
+                <td>0:02:24</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:02:24"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 46</td>
+                <td class="lecture-name" title="Workbook Question 42">Workbook Question 42</td>
+                <td>0:02:39</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:02:39"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 47</td>
+                <td class="lecture-name" title="Workbook Question 43">Workbook Question 43</td>
+                <td>0:03:55</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:03:55"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 48</td>
+                <td class="lecture-name" title="Workbook Question 44">Workbook Question 44</td>
+                <td>0:04:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:04:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 49</td>
+                <td class="lecture-name" title="Workbook Question 45">Workbook Question 45</td>
+                <td>0:05:26</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:05:26"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 50</td>
+                <td class="lecture-name" title="Workbook Question 46">Workbook Question 46</td>
+                <td>0:02:10</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:02:10"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 51</td>
+                <td class="lecture-name" title="Workbook Question 47">Workbook Question 47</td>
+                <td>0:01:27</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:01:27"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 52</td>
+                <td class="lecture-name" title="Workbook Question 48">Workbook Question 48</td>
+                <td>0:08:07</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:08:07"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 53</td>
+                <td class="lecture-name" title="Workbook Question 49">Workbook Question 49</td>
+                <td>0:09:58</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:09:58"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 54</td>
+                <td class="lecture-name" title="Homeomorphic Graphs, Ku ratowski Theorem & Workbook Q uestion 50">Homeomorphic Graphs, Ku ratowski Theorem & Workbook Q uestion 50</td>
+                <td>0:28:06</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:28:06"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 55</td>
+                <td class="lecture-name" title="Colouring, Chromatic  Number & Welsh P owell's Algo">Colouring, Chromatic  Number & Welsh P owell's Algo</td>
+                <td>1:03:22</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="1:03:22"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 56</td>
+                <td class="lecture-name" title="Workbook Question 51">Workbook Question 51</td>
+                <td>0:57:13</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:57:13"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 57</td>
+                <td class="lecture-name" title="Workbook Question 52">Workbook Question 52</td>
+                <td>0:07:34</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:07:34"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 58</td>
+                <td class="lecture-name" title="Workbook Question 53">Workbook Question 53</td>
+                <td>0:17:01</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:17:01"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 59</td>
+                <td class="lecture-name" title="Workbook Question 54">Workbook Question 54</td>
+                <td>0:11:16</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:11:16"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 60</td>
+                <td class="lecture-name" title="Workbook Question 55">Workbook Question 55</td>
+                <td>0:08:23</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:08:23"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 61</td>
+                <td class="lecture-name" title="Workbook Question 56">Workbook Question 56</td>
+                <td>0:08:06</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:08:06"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 62</td>
+                <td class="lecture-name" title="Workbook Question 57">Workbook Question 57</td>
+                <td>0:07:53</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:07:53"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 63</td>
+                <td class="lecture-name" title="Workbook Question 58">Workbook Question 58</td>
+                <td>0:09:00</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:09:00"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 64</td>
+                <td class="lecture-name" title="Workbook Question 59">Workbook Question 59</td>
+                <td>0:03:04</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:03:04"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 65</td>
+                <td class="lecture-name" title="Workbook Question 60">Workbook Question 60</td>
+                <td>0:03:57</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:03:57"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 66</td>
+                <td class="lecture-name" title="Workbook Question 61">Workbook Question 61</td>
+                <td>0:20:58</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:20:58"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 67</td>
+                <td class="lecture-name" title="Workbook Question 62">Workbook Question 62</td>
+                <td>0:09:09</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:09:09"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 01</td>
+                <td class="lecture-name" title="Matching">Matching</td>
+                <td>0:50:33</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:50:33"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 02</td>
+                <td class="lecture-name" title="Perfect Matching">Perfect Matching</td>
+                <td>0:50:52</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:50:52"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 03</td>
+                <td class="lecture-name" title="Workbook Question 63">Workbook Question 63</td>
+                <td>0:04:53</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:04:53"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 04</td>
+                <td class="lecture-name" title="Workbook Question 64">Workbook Question 64</td>
+                <td>0:08:37</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:08:37"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 05</td>
+                <td class="lecture-name" title="Workbook Question 65">Workbook Question 65</td>
+                <td>0:03:45</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:03:45"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 06</td>
+                <td class="lecture-name" title="Workbook Question 66">Workbook Question 66</td>
+                <td>0:05:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:05:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 07</td>
+                <td class="lecture-name" title="Workbook Question 67-68">Workbook Question 67-68</td>
+                <td>0:05:55</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:05:55"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 08</td>
+                <td class="lecture-name" title="Workbook Question 69">Workbook Question 69</td>
+                <td>0:22:56</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:22:56"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 09</td>
+                <td class="lecture-name" title="Workbook Question 70-71">Workbook Question 70-71</td>
+                <td>0:10:35</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:10:35"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 10</td>
+                <td class="lecture-name" title="Complete Matching">Complete Matching</td>
+                <td>0:19:17</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:19:17"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 11</td>
+                <td class="lecture-name" title="Line Covering-Line Independent Set">Line Covering-Line Independent Set</td>
+                <td>1:07:05</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="1:07:05"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 12</td>
+                <td class="lecture-name" title="Vertex Covering-Vertex Independent Set">Vertex Covering-Vertex Independent Set</td>
+                <td>0:49:34</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:49:34"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 13</td>
+                <td class="lecture-name" title="Workbook Question 72-73">Workbook Question 72-73</td>
+                <td>0:14:22</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:14:22"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 14</td>
+                <td class="lecture-name" title="Workbook Question 74">Workbook Question 74</td>
+                <td>0:22:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:22:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 15</td>
+                <td class="lecture-name" title="Workbook Question 75">Workbook Question 75</td>
+                <td>0:30:22</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:30:22"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 16</td>
+                <td class="lecture-name" title="Workbook Question 76-77">Workbook Question 76-77</td>
+                <td>0:13:58</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:13:58"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 17</td>
+                <td class="lecture-name" title="Spanning Tree">Spanning Tree</td>
+                <td>0:14:54</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:14:54"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 18</td>
+                <td class="lecture-name" title="Workbook Question 78-79">Workbook Question 78-79</td>
+                <td>0:15:56</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:15:56"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 19</td>
+                <td class="lecture-name" title="Kirchhoff's Theorem">Kirchhoff's Theorem</td>
+                <td>0:11:52</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:11:52"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 20</td>
+                <td class="lecture-name" title="Workbook Question 80">Workbook Question 80</td>
+                <td>0:08:49</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:08:49"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 21</td>
+                <td class="lecture-name" title="Minimum Spanning Tree (MST) - Kruskal's & Prim's Alg orithm">Minimum Spanning Tree (MST) - Kruskal's & Prim's Alg orithm</td>
+                <td>0:11:06</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:11:06"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 22</td>
+                <td class="lecture-name" title="Workbook Question 81">Workbook Question 81</td>
+                <td>0:18:50</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:18:50"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 23</td>
+                <td class="lecture-name" title="Workbook Questions 82-84">Workbook Questions 82-84</td>
+                <td>0:30:33</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:30:33"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 24</td>
+                <td class="lecture-name" title="Connected Graph, Cut-Vertex & Cut-Edge">Connected Graph, Cut-Vertex & Cut-Edge</td>
+                <td>0:25:42</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:25:42"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 25</td>
+                <td class="lecture-name" title="Cut-Set & Workbook Question 85">Cut-Set & Workbook Question 85</td>
+                <td>0:17:27</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:17:27"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 26</td>
+                <td class="lecture-name" title="Vertex Connect ivity-Edge Connectivity">Vertex Connect ivity-Edge Connectivity</td>
+                <td>0:19:34</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:19:34"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 27</td>
+                <td class="lecture-name" title="Workbook Question 86">Workbook Question 86</td>
+                <td>0:40:28</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:40:28"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 28</td>
+                <td class="lecture-name" title="Workbook Question 87-93">Workbook Question 87-93</td>
+                <td>0:42:44</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:42:44"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 29</td>
+                <td class="lecture-name" title="Workbook Question 94">Workbook Question 94</td>
+                <td>0:13:50</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:13:50"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 30</td>
+                <td class="lecture-name" title="Workbook Question 95">Workbook Question 95</td>
+                <td>0:06:48</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:06:48"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 31</td>
+                <td class="lecture-name" title="Euler Path, Euler Circuit Euler Graph & Traversable Graph">Euler Path, Euler Circuit Euler Graph & Traversable Graph</td>
+                <td>0:30:39</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:30:39"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 32</td>
+                <td class="lecture-name" title="Hamiltonian Graph">Hamiltonian Graph</td>
+                <td>0:15:02</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:15:02"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 33</td>
+                <td class="lecture-name" title="Diameter and Radius of A Graph">Diameter and Radius of A Graph</td>
+                <td>0:23:26</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:23:26"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 34</td>
+                <td class="lecture-name" title="Workbook Question 96">Workbook Question 96</td>
+                <td>0:07:54</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:07:54"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 35</td>
+                <td class="lecture-name" title="Workbook Question 97">Workbook Question 97</td>
+                <td>0:09:11</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:09:11"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 36</td>
+                <td class="lecture-name" title="Workbook Question 98">Workbook Question 98</td>
+                <td>0:14:24</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:14:24"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 37</td>
+                <td class="lecture-name" title="Workbook Question 99-101">Workbook Question 99-101</td>
+                <td>0:52:07</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:52:07"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 38</td>
+                <td class="lecture-name" title="Workbook Question 102">Workbook Question 102</td>
+                <td>0:04:34</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:04:34"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 39</td>
+                <td class="lecture-name" title="Workbook Question 103">Workbook Question 103</td>
+                <td>0:07:17</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:07:17"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 40</td>
+                <td class="lecture-name" title="Workbook Question 104">Workbook Question 104</td>
+                <td>0:12:53</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:12:53"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 41</td>
+                <td class="lecture-name" title="Workbook Question 105">Workbook Question 105</td>
+                <td>0:05:54</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:05:54"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 42</td>
+                <td class="lecture-name" title="Workbook Question 106">Workbook Question 106</td>
+                <td>0:19:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:19:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 43</td>
+                <td class="lecture-name" title="Workbook Question 107">Workbook Question 107</td>
+                <td>0:01:42</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:01:42"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 44</td>
+                <td class="lecture-name" title="Workbook Question 108">Workbook Question 108</td>
+                <td>0:11:37</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:11:37"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 45</td>
+                <td class="lecture-name" title="Workbook Question 109-110">Workbook Question 109-110</td>
+                <td>0:06:39</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:06:39"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 46</td>
+                <td class="lecture-name" title="Workbook Question 111">Workbook Question 111</td>
+                <td>0:07:10</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:07:10"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 47</td>
+                <td class="lecture-name" title="Workbook Question 112">Workbook Question 112</td>
+                <td>0:19:23</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:19:23"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 48</td>
+                <td class="lecture-name" title="Workbook Question 113-114">Workbook Question 113-114</td>
+                <td>0:17:10</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:17:10"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 49</td>
+                <td class="lecture-name" title="Workbook Question 115-116">Workbook Question 115-116</td>
+                <td>0:25:33</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:25:33"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 50</td>
+                <td class="lecture-name" title="Workbook Question 117">Workbook Question 117</td>
+                <td>0:08:11</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:08:11"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 51</td>
+                <td class="lecture-name" title="Workbook Question 118">Workbook Question 118</td>
+                <td>0:12:38</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:12:38"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 52</td>
+                <td class="lecture-name" title="Workbook Question 119-122">Workbook Question 119-122</td>
+                <td>0:18:10</td>
+                <td><input type="checkbox" data-chapter="Chapter 02 Graph Theory (Part-1)" data-duration="0:18:10"></td>
+            </tr>
+            </table><h2>Chapter 03  Functions</h2>
+        <div class="duration-info">
+            <span id="total-duration-Chapter 03  Functions">Total Duration: 8:23:59</span>
+            <span id="completed-duration-Chapter 03  Functions">Completed Duration: 00:00:00</span>
+            <span id="remaining-duration-Chapter 03  Functions">Remaining Duration: 8:23:59</span>
+        </div>
+        <table>
+            <tr>
+                <th>Sr.</th>
+                <th>Lecture Name</th>
+                <th>Duration</th>
+                <th>Completed</th>
+            </tr>
+        
+            <tr>
+                <td>Lecture 01</td>
+                <td class="lecture-name" title="Functions">Functions</td>
+                <td>0:34:08</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:34:08"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 02</td>
+                <td class="lecture-name" title="Workbook Question 1-2">Workbook Question 1-2</td>
+                <td>0:17:04</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:17:04"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 03</td>
+                <td class="lecture-name" title="One-One Function (Injective Function)">One-One Function (Injective Function)</td>
+                <td>0:30:21</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:30:21"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 04</td>
+                <td class="lecture-name" title="Onto Function (Surjective Function)">Onto Function (Surjective Function)</td>
+                <td>0:39:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:39:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 05</td>
+                <td class="lecture-name" title="Workbook Question 3-4">Workbook Question 3-4</td>
+                <td>0:17:47</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:17:47"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 06</td>
+                <td class="lecture-name" title="Workbook Question 5-7">Workbook Question 5-7</td>
+                <td>0:22:01</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:22:01"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 07</td>
+                <td class="lecture-name" title="Workbook Question 8-9">Workbook Question 8-9</td>
+                <td>0:30:24</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:30:24"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 08</td>
+                <td class="lecture-name" title="Bijection">Bijection</td>
+                <td>0:08:24</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:08:24"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 09</td>
+                <td class="lecture-name" title="Identity, Constant and Identical Functions">Identity, Constant and Identical Functions</td>
+                <td>0:14:55</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:14:55"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 10</td>
+                <td class="lecture-name" title="Workbook Question 10-13">Workbook Question 10-13</td>
+                <td>0:39:53</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:39:53"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 11</td>
+                <td class="lecture-name" title="Workbook Question 14-16">Workbook Question 14-16</td>
+                <td>0:20:11</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:20:11"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 12</td>
+                <td class="lecture-name" title="Inverse of a Function">Inverse of a Function</td>
+                <td>0:45:09</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:45:09"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 13</td>
+                <td class="lecture-name" title="Workbook Question 17-18">Workbook Question 17-18</td>
+                <td>0:23:30</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:23:30"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 14</td>
+                <td class="lecture-name" title="Function Composition">Function Composition</td>
+                <td>0:43:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:43:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 15</td>
+                <td class="lecture-name" title="Workbook Question 19">Workbook Question 19</td>
+                <td>0:04:08</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:04:08"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 16</td>
+                <td class="lecture-name" title="Workbook Question 20">Workbook Question 20</td>
+                <td>0:07:44</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:07:44"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 17</td>
+                <td class="lecture-name" title="Workbook Question 21">Workbook Question 21</td>
+                <td>0:08:44</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:08:44"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 18</td>
+                <td class="lecture-name" title="Workbook Question 22">Workbook Question 22</td>
+                <td>0:04:35</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:04:35"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 19</td>
+                <td class="lecture-name" title="Workbook Question 23">Workbook Question 23</td>
+                <td>0:14:29</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:14:29"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 20</td>
+                <td class="lecture-name" title="Workbook Question 24">Workbook Question 24</td>
+                <td>0:05:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:05:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 21</td>
+                <td class="lecture-name" title="Workbook Question 25">Workbook Question 25</td>
+                <td>0:10:47</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:10:47"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 22</td>
+                <td class="lecture-name" title="Workbook Question 26">Workbook Question 26</td>
+                <td>0:11:33</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:11:33"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 23</td>
+                <td class="lecture-name" title="Workbook Question 27">Workbook Question 27</td>
+                <td>0:25:33</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:25:33"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 24</td>
+                <td class="lecture-name" title="Workbook Question 28">Workbook Question 28</td>
+                <td>0:16:49</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:16:49"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 25</td>
+                <td class="lecture-name" title="Workbook Question 29">Workbook Question 29</td>
+                <td>0:08:41</td>
+                <td><input type="checkbox" data-chapter="Chapter 03  Functions" data-duration="0:08:41"></td>
+            </tr>
+            </table><h2>Chapter 04 Group Theory</h2>
+        <div class="duration-info">
+            <span id="total-duration-Chapter 04 Group Theory">Total Duration: 11:50:56</span>
+            <span id="completed-duration-Chapter 04 Group Theory">Completed Duration: 00:00:00</span>
+            <span id="remaining-duration-Chapter 04 Group Theory">Remaining Duration: 11:50:56</span>
+        </div>
+        <table>
+            <tr>
+                <th>Sr.</th>
+                <th>Lecture Name</th>
+                <th>Duration</th>
+                <th>Completed</th>
+            </tr>
+        
+            <tr>
+                <td>Lecture 01</td>
+                <td class="lecture-name" title="Introduction t o Group Theory (Part 1)">Introduction t o Group Theory (Part 1)</td>
+                <td>0:47:13</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:47:13"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 02</td>
+                <td class="lecture-name" title="Introduction t o Group Theory (Part 2)">Introduction t o Group Theory (Part 2)</td>
+                <td>0:31:02</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:31:02"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 03</td>
+                <td class="lecture-name" title="Workbook Question 1-3">Workbook Question 1-3</td>
+                <td>0:28:20</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:28:20"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 04</td>
+                <td class="lecture-name" title="Workbook Question 4-6">Workbook Question 4-6</td>
+                <td>0:16:44</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:16:44"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 05</td>
+                <td class="lecture-name" title="Workbook Question 7-10">Workbook Question 7-10</td>
+                <td>0:23:18</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:23:18"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 06</td>
+                <td class="lecture-name" title="Workbook Question 11-13">Workbook Question 11-13</td>
+                <td>0:44:21</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:44:21"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 07</td>
+                <td class="lecture-name" title="Finite Groups">Finite Groups</td>
+                <td>0:36:19</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:36:19"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 08</td>
+                <td class="lecture-name" title="Addition Modulo m & Multiplication Modulo m">Addition Modulo m & Multiplication Modulo m</td>
+                <td>0:42:36</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:42:36"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 09</td>
+                <td class="lecture-name" title="Workbook Question 14-19">Workbook Question 14-19</td>
+                <td>0:23:44</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:23:44"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 10</td>
+                <td class="lecture-name" title="Workbook Question 20-21">Workbook Question 20-21</td>
+                <td>0:38:40</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:38:40"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 11</td>
+                <td class="lecture-name" title="Workbook Question 22-23">Workbook Question 22-23</td>
+                <td>0:18:08</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:18:08"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 12</td>
+                <td class="lecture-name" title="Order of an Element of a Group">Order of an Element of a Group</td>
+                <td>0:34:12</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:34:12"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 13</td>
+                <td class="lecture-name" title="Workbook Question 24-25">Workbook Question 24-25</td>
+                <td>0:14:55</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:14:55"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 14</td>
+                <td class="lecture-name" title="Subgroup">Subgroup</td>
+                <td>0:47:31</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:47:31"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 15</td>
+                <td class="lecture-name" title="Workbook Question 26-31">Workbook Question 26-31</td>
+                <td>0:39:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:39:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 16</td>
+                <td class="lecture-name" title="Cyclic Group">Cyclic Group</td>
+                <td>0:46:59</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:46:59"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 17</td>
+                <td class="lecture-name" title="Workbook Question 32">Workbook Question 32</td>
+                <td>0:09:08</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:09:08"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 18</td>
+                <td class="lecture-name" title="Number of gene rators of a Cyclic Group">Number of gene rators of a Cyclic Group</td>
+                <td>0:28:42</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:28:42"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 19</td>
+                <td class="lecture-name" title="Workbook Question 33-36">Workbook Question 33-36</td>
+                <td>0:15:17</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:15:17"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 20</td>
+                <td class="lecture-name" title="Properties of Cyclic Group">Properties of Cyclic Group</td>
+                <td>0:39:49</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:39:49"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 21</td>
+                <td class="lecture-name" title="Workbook Question 37-38">Workbook Question 37-38</td>
+                <td>0:05:18</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:05:18"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 22</td>
+                <td class="lecture-name" title="Workbook Question 39-40">Workbook Question 39-40</td>
+                <td>0:40:14</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:40:14"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 23</td>
+                <td class="lecture-name" title="Workbook Question 41-44">Workbook Question 41-44</td>
+                <td>0:38:35</td>
+                <td><input type="checkbox" data-chapter="Chapter 04 Group Theory" data-duration="0:38:35"></td>
+            </tr>
+            </table><h2>Chapter 05  Mathematical Logic</h2>
+        <div class="duration-info">
+            <span id="total-duration-Chapter 05  Mathematical Logic">Total Duration: 14:03:39</span>
+            <span id="completed-duration-Chapter 05  Mathematical Logic">Completed Duration: 00:00:00</span>
+            <span id="remaining-duration-Chapter 05  Mathematical Logic">Remaining Duration: 14:03:39</span>
+        </div>
+        <table>
+            <tr>
+                <th>Sr.</th>
+                <th>Lecture Name</th>
+                <th>Duration</th>
+                <th>Completed</th>
+            </tr>
+        
+            <tr>
+                <td>Lecture 01</td>
+                <td class="lecture-name" title="Introduction t o Mathematical Logic">Introduction t o Mathematical Logic</td>
+                <td>0:25:20</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:25:20"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 02</td>
+                <td class="lecture-name" title="Connectives">Connectives</td>
+                <td>0:44:25</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:44:25"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 03</td>
+                <td class="lecture-name" title="Tautology, Contradicti on, Contingency & Satisfiabili ty">Tautology, Contradicti on, Contingency & Satisfiabili ty</td>
+                <td>0:27:36</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:27:36"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 04</td>
+                <td class="lecture-name" title="Tautological Implication & Equivalence">Tautological Implication & Equivalence</td>
+                <td>0:32:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:32:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 05</td>
+                <td class="lecture-name" title="Argument & Rules of Inference">Argument & Rules of Inference</td>
+                <td>0:54:13</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:54:13"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 06</td>
+                <td class="lecture-name" title="Workbook Question 1-6">Workbook Question 1-6</td>
+                <td>0:23:36</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:23:36"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 07</td>
+                <td class="lecture-name" title="Workbook Question 7-10">Workbook Question 7-10</td>
+                <td>0:22:38</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:22:38"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 08</td>
+                <td class="lecture-name" title="Workbook Question 11">Workbook Question 11</td>
+                <td>0:06:23</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:06:23"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 09</td>
+                <td class="lecture-name" title="Workbook Question 12-18">Workbook Question 12-18</td>
+                <td>0:55:59</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:55:59"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 10</td>
+                <td class="lecture-name" title="Workbook Question 19">Workbook Question 19</td>
+                <td>0:15:52</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:15:52"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 11</td>
+                <td class="lecture-name" title="Workbook Question 20-21">Workbook Question 20-21</td>
+                <td>0:20:38</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:20:38"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 12</td>
+                <td class="lecture-name" title="Workbook Question 22-23">Workbook Question 22-23</td>
+                <td>0:11:29</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:11:29"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 13</td>
+                <td class="lecture-name" title="Workbook Question 24-26">Workbook Question 24-26</td>
+                <td>0:22:16</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:22:16"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 14</td>
+                <td class="lecture-name" title="Workbook Question 27-28">Workbook Question 27-28</td>
+                <td>0:06:57</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:06:57"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 15</td>
+                <td class="lecture-name" title="Workbook Question 29-31">Workbook Question 29-31</td>
+                <td>0:37:28</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:37:28"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 16</td>
+                <td class="lecture-name" title="Workbook Question 32">Workbook Question 32</td>
+                <td>0:16:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:16:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 17</td>
+                <td class="lecture-name" title="Workbook Question 33-34">Workbook Question 33-34</td>
+                <td>0:13:25</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:13:25"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 18</td>
+                <td class="lecture-name" title="Workbook Question 35-39">Workbook Question 35-39</td>
+                <td>0:30:32</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:30:32"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 19</td>
+                <td class="lecture-name" title="Workbook Question 40-41">Workbook Question 40-41</td>
+                <td>0:11:10</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:11:10"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 20</td>
+                <td class="lecture-name" title="Proof by Contradiction & Workbook Question 43">Proof by Contradiction & Workbook Question 43</td>
+                <td>0:11:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:11:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 21</td>
+                <td class="lecture-name" title="Conditional proof rule & Workbook Question 44">Conditional proof rule & Workbook Question 44</td>
+                <td>0:07:23</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:07:23"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 22</td>
+                <td class="lecture-name" title="Workbook Question 42">Workbook Question 42</td>
+                <td>0:07:10</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:07:10"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 23</td>
+                <td class="lecture-name" title="Workbook Question 45-46">Workbook Question 45-46</td>
+                <td>0:08:47</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:08:47"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 24</td>
+                <td class="lecture-name" title="Introduction to Predicate Logic">Introduction to Predicate Logic</td>
+                <td>0:26:23</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:26:23"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 25</td>
+                <td class="lecture-name" title="Equivalence and Negation of Predicate Formulae">Equivalence and Negation of Predicate Formulae</td>
+                <td>0:14:17</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:14:17"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 26</td>
+                <td class="lecture-name" title="Workbook Question 1-3">Workbook Question 1-3</td>
+                <td>0:07:41</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:07:41"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 27</td>
+                <td class="lecture-name" title="Sentences with Multiple Quantifiers & Relationship D iagram">Sentences with Multiple Quantifiers & Relationship D iagram</td>
+                <td>0:34:24</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:34:24"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 28</td>
+                <td class="lecture-name" title="Logical Equivalences & Logical Implications">Logical Equivalences & Logical Implications</td>
+                <td>0:18:36</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:18:36"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 29</td>
+                <td class="lecture-name" title="Rules of Inference">Rules of Inference</td>
+                <td>0:09:51</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:09:51"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 30</td>
+                <td class="lecture-name" title="Workbook Question 4-5">Workbook Question 4-5</td>
+                <td>0:13:58</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:13:58"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 31</td>
+                <td class="lecture-name" title="Workbook Question 6">Workbook Question 6</td>
+                <td>0:15:03</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:15:03"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 32</td>
+                <td class="lecture-name" title="Workbook Question 7">Workbook Question 7</td>
+                <td>0:11:34</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:11:34"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 33</td>
+                <td class="lecture-name" title="Workbook Question 8">Workbook Question 8</td>
+                <td>0:02:29</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:02:29"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 34</td>
+                <td class="lecture-name" title="Workbook Question 9">Workbook Question 9</td>
+                <td>0:03:01</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:03:01"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 35</td>
+                <td class="lecture-name" title="Workbook Question 10-11">Workbook Question 10-11</td>
+                <td>0:04:33</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:04:33"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 36</td>
+                <td class="lecture-name" title="Workbook Question 12">Workbook Question 12</td>
+                <td>0:03:06</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:03:06"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 37</td>
+                <td class="lecture-name" title="Workbook Question 13">Workbook Question 13</td>
+                <td>0:12:29</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:12:29"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 38</td>
+                <td class="lecture-name" title="Workbook Question 14">Workbook Question 14</td>
+                <td>0:08:58</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:08:58"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 39</td>
+                <td class="lecture-name" title="Workbook Question 15-18">Workbook Question 15-18</td>
+                <td>0:23:59</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:23:59"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 40</td>
+                <td class="lecture-name" title="Workbook Question 19-26">Workbook Question 19-26</td>
+                <td>0:22:26</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:22:26"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 41</td>
+                <td class="lecture-name" title="Workbook Question 27-28">Workbook Question 27-28</td>
+                <td>0:09:02</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:09:02"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 42</td>
+                <td class="lecture-name" title="Workbook Question 29">Workbook Question 29</td>
+                <td>0:12:34</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:12:34"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 43</td>
+                <td class="lecture-name" title="Workbook Question 30">Workbook Question 30</td>
+                <td>0:05:10</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:05:10"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 44</td>
+                <td class="lecture-name" title="Workbook Question 31">Workbook Question 31</td>
+                <td>0:15:26</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:15:26"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 45</td>
+                <td class="lecture-name" title="Workbook Question 32">Workbook Question 32</td>
+                <td>0:10:55</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:10:55"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 46</td>
+                <td class="lecture-name" title="Workbook Question 33">Workbook Question 33</td>
+                <td>0:32:37</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:32:37"></td>
+            </tr>
+            
+            <tr>
+                <td>Lecture 47</td>
+                <td class="lecture-name" title="Workbook Question 34">Workbook Question 34</td>
+                <td>0:11:05</td>
+                <td><input type="checkbox" data-chapter="Chapter 05  Mathematical Logic" data-duration="0:11:05"></td>
+            </tr>
+            </table>
     <script>
         function toSeconds(time) {
             const [hours, minutes, seconds] = time.split(':').map(Number);
@@ -196,18 +2156,4 @@ def generate_html(chapters):
     </script>
     </body>
     </html>
-    """
-    return html
-
-def process_pdf(pdf_path, output_path):
-    text = extract_text_from_pdf(pdf_path)
-    chapters = parse_lecture_data(text)
-    html_content = generate_html(chapters)
     
-    with open(output_path, 'w', encoding='utf-8') as file:
-        file.write(html_content)
-
-# Usage
-pdf_path = '01_C_Prog.pdf'
-output_path = '01_C_Prog.html'
-process_pdf(pdf_path, output_path)
